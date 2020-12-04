@@ -2,13 +2,10 @@ package com.infotransferserver.InfoTransferServer.user;
 
 import com.infotransferserver.InfoTransferServer.info.InfoModel;
 import com.infotransferserver.InfoTransferServer.info.InfoRepository;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 public class UserController {
 
     private InfoRepository infoRepo;
@@ -22,37 +19,21 @@ public class UserController {
     }
 
 
-    @GetMapping("/getmessage")
-    public String welcome (Model model)
-    {
-        InfoModel info = new InfoModel(0);
-        info.setInfoTitle("");
-        info.setMessage("");
-        InfoUser infoUser = new InfoUser(0);
-        infoUser.addInfo(info);
-        model.addAttribute("infos", infoUser);
-
-        return "getInfo.html";
-    }
-
-    @PostMapping("/getmessage")
-    public String getInfo (
-            @RequestParam("userid") int userid,
+    @GetMapping("/getmessage/{userid}")
+    public InfoUser getInfoByUserId (
+            @PathVariable("userid") int userid,
             Model model)
     {
         UserModel user = userRepo.findById(userid);
-
         InfoUser infoUser = new InfoUser(userid);
 
         for (int i = 0; i < user.getInfoIds().size(); i++)
         {
-            InfoModel info = infoRepo.findById(user.getInfoIds().get(i));
+            InfoModel info = infoRepo.findById( user.getInfoIds().get(i) );
             infoUser.addInfo(info);
         }
 
-        model.addAttribute("infos", infoUser);
-
-        return "getInfo.html";
+        return infoUser;
     }
 
 }
