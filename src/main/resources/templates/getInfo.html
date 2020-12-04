@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title> GET MESSAGE </title>
+
+
+    </head>
+    <body>
+    <form action="/getmessage" method="post"  >
+        <label> Id: </label> <input type="text" id="userid" name="userid" > </input>
+        <input type="submit" value="Search" > </input>
+    </form>
+
+    <p th:each="infos : ${infos.infos}"
+       th:text="${infos.infoTitle} + '     ' + ${infos.message}"></p>
+
+    </body>
+</html>

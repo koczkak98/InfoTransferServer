@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title> INPUT </title>
+
+    </head>
+    <body>
+
+        <form action="/sendmessage" method="post" >
+            <label> Id: </label> <input type="text" id="userid" name="userid" > </input>
+            <label> Title: </label> <input type="text" id="infoTitle" name="infoTitle" > </input>
+            <p></p>
+            <label> Message: </label> <input type="text" name="message" > </input>
+            <input type="submit" id="addMessage" value="Send" > </input>
+        </form>
+        <p th:text="${forUser}" ></p>
+    </body>
+</html>
