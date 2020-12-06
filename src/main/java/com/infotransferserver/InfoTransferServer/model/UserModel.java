@@ -1,4 +1,4 @@
-package com.infotransferserver.InfoTransferServer.user;
+package com.infotransferserver.InfoTransferServer.model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,6 +16,12 @@ public class UserModel {
     @Column
     private String name;
 
+    @Column
+    private String nickname;
+
+    @Column
+    private String pwd;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "user_info_mapping",
@@ -24,9 +30,12 @@ public class UserModel {
     @Column(name = "infoid")
     private List<Integer> infoIds;
 
+
     public UserModel() {
         this.infoIds = new ArrayList<Integer>();
     }
+
+
 
     public Integer getUserId() {
         return userId;
@@ -42,6 +51,22 @@ public class UserModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getPwd() {
+        return pwd;
+    }
+
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
     }
 
     public List<Integer> getInfoIds() {

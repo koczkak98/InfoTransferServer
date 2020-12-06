@@ -1,4 +1,4 @@
-package com.infotransferserver.InfoTransferServer.info;
+package com.infotransferserver.InfoTransferServer.model;
 
 import javax.persistence.*;
 

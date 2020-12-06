@@ -1,7 +1,10 @@
-package com.infotransferserver.InfoTransferServer.user;
+package com.infotransferserver.InfoTransferServer.controller;
 
-import com.infotransferserver.InfoTransferServer.info.InfoModel;
-import com.infotransferserver.InfoTransferServer.info.InfoRepository;
+import com.infotransferserver.InfoTransferServer.db.UserRepository;
+import com.infotransferserver.InfoTransferServer.model.InfoModel;
+import com.infotransferserver.InfoTransferServer.db.InfoRepository;
+import com.infotransferserver.InfoTransferServer.model.InfoUser;
+import com.infotransferserver.InfoTransferServer.model.UserModel;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 

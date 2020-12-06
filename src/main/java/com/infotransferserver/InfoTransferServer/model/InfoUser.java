@@ -1,6 +1,6 @@
-package com.infotransferserver.InfoTransferServer.user;
+package com.infotransferserver.InfoTransferServer.model;
 
-import com.infotransferserver.InfoTransferServer.info.InfoModel;
+import com.infotransferserver.InfoTransferServer.model.InfoModel;
 
 import java.util.ArrayList;
 import java.util.List;

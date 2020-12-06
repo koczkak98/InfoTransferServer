@@ -1,15 +1,16 @@
-package com.infotransferserver.InfoTransferServer.info;
-import com.infotransferserver.InfoTransferServer.user.UserModel;
-import com.infotransferserver.InfoTransferServer.user.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+package com.infotransferserver.InfoTransferServer.controller;
+import com.infotransferserver.InfoTransferServer.db.InfoRepository;
+import com.infotransferserver.InfoTransferServer.db.UserRepository;
+import com.infotransferserver.InfoTransferServer.model.InfoModel;
+import com.infotransferserver.InfoTransferServer.model.UserModel;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
+import java.security.NoSuchAlgorithmException;
 
 @Controller
 public class InfoController {
@@ -24,10 +25,22 @@ public class InfoController {
         this.userRepo = userRepo;
     }
 
-    @GetMapping("/sendmessage")
-    public String startInputInfo (Model model)
+    @GetMapping("/")
+    public String welcome ()
     {
-        model.addAttribute("info", new InfoModel());
+        return "";
+    }
+
+    @GetMapping("/sendmessage")
+    public String startInputInfo (
+            Model model) throws NoSuchAlgorithmException {
+        Security security = new Security();
+
+        String keyExample = "test";
+        String keyExampleEncrypt = security.encrypt(keyExample);
+
+
+
         model.addAttribute("forUser", forUser);
 
         return "input.html";
