@@ -2,6 +2,7 @@ package com.infotransferserver.InfoTransferServer.controller;
 import com.infotransferserver.InfoTransferServer.db.ApiKeyRepository;
 import com.infotransferserver.InfoTransferServer.db.InfoRepository;
 import com.infotransferserver.InfoTransferServer.model.ApiKey;
+import com.infotransferserver.InfoTransferServer.model.InfoLists;
 import com.infotransferserver.InfoTransferServer.model.InfoModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 public class InfoController {
@@ -30,7 +32,7 @@ public class InfoController {
         return "";
     }
 
-    @GetMapping("/sendmessage/apikey={apikey}")
+    @GetMapping("/addmessage/apikey={apikey}")
     public String startInputInfo (
             Model model,
             @PathVariable("apikey") String apikey) {
@@ -60,7 +62,7 @@ public class InfoController {
         return returnLink;
     }
 
-    @PostMapping("/sendmessage/apikey={apikey}")
+    @PostMapping("/addmessage/apikey={apikey}")
     public String finishInputInfo (
             @RequestParam("infoTitle") String infoTitle,
             @RequestParam("message") String message,
@@ -68,7 +70,7 @@ public class InfoController {
             Model model)
     {
 
-        String returnLink = "redirect:/sendmessage/apikey=" + apikey;
+        String returnLink = "redirect:/addmessage/apikey=" + apikey;
         InfoModel info = new InfoModel();
 
         try {
@@ -110,7 +112,55 @@ public class InfoController {
         return returnLink;
     }
 
+    @GetMapping("/update/{title}apikey={apikey}")
+    public String startUpdateInfoByTitle(
+            @PathVariable("title") String title,
+            @PathVariable("apikey") String apikey,
+            Model model)
+    {
+        String returnLink = "";
 
+        ApiKey apiKey = apiKeyRepo.findByApiKey(apikey);
+        if (apiKey == null)
+        {
+            returnLink = "error.html";
+        }
+        else
+        {
+            InfoLists infoLists = new InfoLists();
+            infoLists.setInfos(infoRepo.findByTitle(title));
+
+            model.addAttribute("infos", infoLists);
+            model.addAttribute("apikey", apiKey);
+
+            returnLink = "update.html";
+        }
+        return returnLink;
+    }
+
+    @PostMapping("/update/{id}apikey={apikey}")
+    public String finishUpdateInfo (
+            @PathVariable("id") int id,
+            @PathVariable("apikey") String apikey)
+    {
+        System.out.println("finishUpdateInfo");
+
+        String returnLink = "";
+
+        ApiKey apiKey = apiKeyRepo.findByApiKey(apikey);
+        if (apiKey == null)
+        {
+            returnLink = "error.html";
+        }
+        else
+        {
+            InfoModel info = infoRepo.findById(id);
+
+            returnLink= "redirect:/update/" + info.getInfoTitle() + "apikey=" + apikey;
+        }
+
+        return returnLink;
+    }
 
 
 

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title> UPDATE </title>
+        <style>
+            table {
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+                }
+
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+
+                tr:nth-child(even) {
+                background-color: #dddddd;
+            }
+        </style>
+
+    </head>
+    <body>
+
+        <table class="table table-striped">
+            <tr>
+                <th> CHOOSE </th>
+                <th> DATE </th>
+                <th> TITLE </th>
+                <th> DETAILS </th>
+            </tr>
+            <tr th:each="infos : ${infos.infos}"  >
+
+                <td>
+                    <a th:href="@{/update/{id}(id=${infos.infoId})apikey={apikey}(apikey=${apikey.apiKey})}"> ... </a>
+                </td>
+
+                <td  th:text="${infos.date}">  </td>
+
+                <td th:text="${infos.infoTitle}"  ></td>
+
+                <td th:text="${infos.message}" ></td>
+
+            </tr>
+        </table>
+
+    </body>
+</html>
