@@ -1,6 +1,7 @@
 package com.infotransferserver.InfoTransferServer.controller;
 
 import com.infotransferserver.InfoTransferServer.db.ApiKeyRepository;
+import com.infotransferserver.InfoTransferServer.model.ApiKey;
 import com.infotransferserver.InfoTransferServer.model.InfoLists;
 import com.infotransferserver.InfoTransferServer.model.InfoModel;
 import com.infotransferserver.InfoTransferServer.db.InfoRepository;
@@ -22,29 +23,46 @@ public class UserController {
 
 
     @GetMapping("/getinfo/today/apikey={apikey}")
-    public InfoLists getInfoByActuallyTime ()
+    public InfoLists getInfoByActuallyTime (@PathVariable("apikey") String apikey)
     {
-        Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        System.out.println(formatter.format(date));
+        ApiKey apiKey = apiKeyRepo.findByApiKey(apikey);
+        if (apiKey == null)
+        {
+            return new InfoLists();
+        }
+        else {
+
+            Date date = new Date();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            System.out.println(formatter.format(date));
 
 
-        InfoLists infoLists = new InfoLists();
-        infoLists.setInfos(infoRepo.findByDate(formatter.format(date)));
+            InfoLists infoLists = new InfoLists();
+            infoLists.setInfos(infoRepo.findByDate(formatter.format(date)));
 
-        return infoLists;
+            return infoLists;
+        }
     }
 
     @GetMapping("/getinfo/{day}apikey={apikey}")
-    public InfoLists getInfoByDay (@PathVariable("day") String day)
+    public InfoLists getInfoByDay (
+            @PathVariable("apikey") String apikey,
+            @PathVariable("day") String day)
     {
+        ApiKey apiKey = apiKeyRepo.findByApiKey(apikey);
+        if (apiKey == null)
+        {
+            return new InfoLists();
+        }
+        else {
 
-        System.out.println(day);
+            System.out.println(day);
 
-        InfoLists infoLists = new InfoLists();
-        infoLists.setInfos(infoRepo.findByDate(day));
+            InfoLists infoLists = new InfoLists();
+            infoLists.setInfos(infoRepo.findByDate(day));
 
-        return infoLists;
+            return infoLists;
+        }
     }
 
 }
