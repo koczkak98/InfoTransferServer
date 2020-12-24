@@ -1,8 +1,9 @@
 package com.infotransferserver.InfoTransferServer.controller;
+import com.infotransferserver.InfoTransferServer.db.ApiKeyRepository;
 import com.infotransferserver.InfoTransferServer.db.InfoRepository;
-import com.infotransferserver.InfoTransferServer.db.UserRepository;
+import com.infotransferserver.InfoTransferServer.model.ApiKey;
 import com.infotransferserver.InfoTransferServer.model.InfoModel;
-import com.infotransferserver.InfoTransferServer.model.UserModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,20 +11,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Controller
 public class InfoController {
 
+    @Autowired
     private InfoRepository infoRepo;
-    private UserRepository userRepo;
-
+    @Autowired
+    private ApiKeyRepository apiKeyRepo;
     private String forUser = "";
 
-    public InfoController(InfoRepository infoRepo, UserRepository userRepo) {
-        this.infoRepo = infoRepo;
-        this.userRepo = userRepo;
-    }
 
     @GetMapping("/")
     public String welcome ()
@@ -31,50 +30,71 @@ public class InfoController {
         return "";
     }
 
-    @GetMapping("/sendmessage")
+    @GetMapping("/sendmessage/apikey={apikey}")
     public String startInputInfo (
-            Model model) throws NoSuchAlgorithmException {
-        Security security = new Security();
+            Model model,
+            @PathVariable("apikey") String apikey) {
 
-        String keyExample = "test";
-        String keyExampleEncrypt = security.encrypt(keyExample);
+        String returnLink = "";
 
+        /** FIND THE USER */
+        try {
+            ApiKey apiKey = apiKeyRepo.findByApiKey(apikey);
+            if (apiKey == null)
+            {
+                returnLink = "error.html";
+            }
+            else {
+                model.addAttribute("apikey", apiKey);
+                returnLink = "input.html";
+            }
 
-
+        }
+        catch (Exception e)
+        {
+            returnLink = "error.html";
+            System.out.println(apikey);
+        }
         model.addAttribute("forUser", forUser);
 
-        return "input.html";
+        return returnLink;
     }
 
-    @PostMapping("/sendmessage")
+    @PostMapping("/sendmessage/apikey={apikey}")
     public String finishInputInfo (
-            @RequestParam("userid") int userid,
             @RequestParam("infoTitle") String infoTitle,
             @RequestParam("message") String message,
+            @PathVariable("apikey") String apikey,
             Model model)
     {
-        /** FIND THE USER */
 
-        UserModel user = userRepo.findById(userid);
+        String returnLink = "redirect:/sendmessage/apikey=" + apikey;
         InfoModel info = new InfoModel();
 
         try {
 
-            /** SAVE DB */
-            info.setInfoTitle(infoTitle);
-            System.out.println(info.getInfoTitle());
-            info.setMessage(message);
-            System.out.println(info.getMessage());
-            infoRepo.save(info);
+            ApiKey apiKey = apiKeyRepo.findByApiKey(apikey);
+            if (apiKey == null)
+            {
+                returnLink = "error.html";
+            }
+            else {
 
-            /** UPDATE uim */
-            System.out.println(info.getInfoId());
-            user.addInfoIds(info.getInfoId());
-            userRepo.save(user);
+                /** SAVE DB */
+                info.setInfoTitle(infoTitle);
+                System.out.println(info.getInfoTitle());
+                info.setMessage(message);
+                System.out.println(info.getMessage());
 
-            System.out.println(user.getInfoIds());
+                Date date = new Date();
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                System.out.println(formatter.format(date));
+                info.setDate(formatter.format(date));
 
-            forUser = "SUCCESSFULLY";
+                infoRepo.save(info);
+
+                forUser = "SUCCESSFULLY";
+            }
         }
         catch (NullPointerException e)
         {
@@ -84,11 +104,10 @@ public class InfoController {
         catch (Exception e)
         {
             System.out.println("Exception");
-            forUser = "NO SUCCESSFULLY";
+            forUser = "NOT SUCCESSFULLY";
         }
 
-
-        return "redirect:/sendmessage";
+        return returnLink;
     }
 
 

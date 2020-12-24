@@ -9,21 +9,24 @@ public class Security {
     private PublicKey publicKey = null;
     private PrivateKey privateKey = null;
 
-    public Security() throws NoSuchAlgorithmException {
+
+    private void setPublicKeyAndPrivateKey() throws NoSuchAlgorithmException {
         if(publicKey == null && privateKey == null) {
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
             keyGen.initialize(512);
             KeyPair pair = keyGen.generateKeyPair();
 
-            publicKey = pair.getPublic();
-            System.out.println(publicKey);
-            privateKey = pair.getPrivate();
+            this.publicKey = pair.getPublic();
+
+            this.privateKey = pair.getPrivate();
         }
     }
 
-    public String encrypt(String toBeEncrypted)
-    {
+
+    public String encrypt(String toBeEncrypted) throws NoSuchAlgorithmException {
         String encrypted = "";
+
+        setPublicKeyAndPrivateKey();
 
         try {
             Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA1AndMGF1Padding");
@@ -39,8 +42,8 @@ public class Security {
         return encrypted;
     }
 
-    public String decrypt(byte[] encrypted)
-    {
+    public String decrypt(byte[] encrypted) throws NoSuchAlgorithmException {
+        setPublicKeyAndPrivateKey();
         String original = "";
         try {
             Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA1AndMGF1Padding");

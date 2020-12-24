@@ -1,42 +1,50 @@
 package com.infotransferserver.InfoTransferServer.controller;
 
-import com.infotransferserver.InfoTransferServer.db.UserRepository;
+import com.infotransferserver.InfoTransferServer.db.ApiKeyRepository;
+import com.infotransferserver.InfoTransferServer.model.InfoLists;
 import com.infotransferserver.InfoTransferServer.model.InfoModel;
 import com.infotransferserver.InfoTransferServer.db.InfoRepository;
-import com.infotransferserver.InfoTransferServer.model.InfoUser;
-import com.infotransferserver.InfoTransferServer.model.UserModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 @RestController
 public class UserController {
 
+    @Autowired
     private InfoRepository infoRepo;
-    private UserRepository userRepo;
+    @Autowired
+    private ApiKeyRepository apiKeyRepo;
 
-    private String forUser = "";
 
-    public UserController(InfoRepository infoRepo, UserRepository userRepo) {
-        this.infoRepo = infoRepo;
-        this.userRepo = userRepo;
+    @GetMapping("/getinfo/today/apikey={apikey}")
+    public InfoLists getInfoByActuallyTime ()
+    {
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        System.out.println(formatter.format(date));
+
+
+        InfoLists infoLists = new InfoLists();
+        infoLists.setInfos(infoRepo.findByDate(formatter.format(date)));
+
+        return infoLists;
     }
 
-
-    @GetMapping("/getmessage/{userid}")
-    public InfoUser getInfoByUserId (
-            @PathVariable("userid") int userid,
-            Model model)
+    @GetMapping("/getinfo/{day}apikey={apikey}")
+    public InfoLists getInfoByDay (@PathVariable("day") String day)
     {
-        UserModel user = userRepo.findById(userid);
-        InfoUser infoUser = new InfoUser(userid);
 
-        for (int i = 0; i < user.getInfoIds().size(); i++)
-        {
-            InfoModel info = infoRepo.findById( user.getInfoIds().get(i) );
-            infoUser.addInfo(info);
-        }
+        System.out.println(day);
 
-        return infoUser;
+        InfoLists infoLists = new InfoLists();
+        infoLists.setInfos(infoRepo.findByDate(day));
+
+        return infoLists;
     }
 
 }

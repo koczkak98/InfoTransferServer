@@ -7,8 +7,7 @@
     </head>
     <body>
 
-        <form action="/sendmessage" method="post" >
-            <label> Id: </label> <input type="text" id="userid" name="userid" > </input>
+        <form th:action="@{/sendmessage/apikey={apikey}(apikey=${apikey.apiKey})}" method="post" >
             <label> Title: </label> <input type="text" id="infoTitle" name="infoTitle" > </input>
             <p></p>
             <label> Message: </label> <input type="text" name="message" > </input>
