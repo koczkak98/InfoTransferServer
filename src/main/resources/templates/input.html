@@ -1,18 +1,31 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <style>
+            body {
+              background-color: lightblue;
+
+              position: relative;
+              margin-left: 20%;
+              margin-right: 20%;
+              margin-top: 2%;
+            }
+
+        </style>
         <meta charset="UTF-8">
         <title> INPUT </title>
 
     </head>
     <body>
 
+    <div class="static" >
         <form th:action="@{/addmessage/apikey={apikey}(apikey=${apikey.apiKey})}" method="post" >
             <label> Title: </label> <input type="text" id="infoTitle" name="infoTitle" > </input>
             <p></p>
             <label> Message: </label> <input type="text" name="message" > </input>
             <input type="submit" id="addMessage" value="Send" > </input>
         </form>
+    </div>
         <p th:text="${forUser}" ></p>
     </body>
 </html>

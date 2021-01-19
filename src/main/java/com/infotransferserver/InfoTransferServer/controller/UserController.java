@@ -25,7 +25,7 @@ public class UserController {
         ApiKey apiKey = apiKeyRepo.findByApiKey(apikey);
         if (apiKey == null)
         {
-            return new InfoLists();
+            return null;
         }
         else {
 
@@ -49,14 +49,20 @@ public class UserController {
         ApiKey apiKey = apiKeyRepo.findByApiKey(apikey);
         if (apiKey == null)
         {
-            return new InfoLists();
+            return null;
         }
         else {
 
             System.out.println(day);
 
             InfoLists infoLists = new InfoLists();
-            infoLists.setInfos(infoRepo.findByDate(day));
+            try {
+                infoLists.setInfos(infoRepo.findByDate(day));
+            }
+            catch (NullPointerException e)
+            {
+                infoLists = null;
+            }
 
             return infoLists;
         }

@@ -25,13 +25,6 @@ public class InfoController {
     private ApiKeyRepository apiKeyRepo;
     private String forUser = "";
 
-
-    @GetMapping("/")
-    public String welcome ()
-    {
-        return "";
-    }
-
     @GetMapping("/addmessage/apikey={apikey}")
     public String startInputInfo (
             Model model,
